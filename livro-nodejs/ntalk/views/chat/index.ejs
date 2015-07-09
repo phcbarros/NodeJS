@@ -20,7 +20,10 @@
 	
 	var socket = io('http://localhost:3000'),
 		enviar = null,
-		msg = "";
+		msg = ""
+		
+	//avisa o servidor que o usuário entrou na sala
+	socket.emit('join', '<%- sala %>');
 	
 	//fica ouvindo o evento send-client emito pelo servidor
 	socket.on("send-client", function(data){
@@ -29,7 +32,6 @@
 	
 	enviar = function(){
 		msg = document.getElementById('msg').value;
-		socket.emit('send-server', {msg: msg}); //envia a mensagem para o servidor
-		msg.value = "";
+		socket.emit('send-server', msg); //envia a mensagem para o servidor
 	}
 </script>

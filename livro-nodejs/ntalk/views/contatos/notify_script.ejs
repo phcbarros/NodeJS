@@ -1,0 +1,37 @@
+<script src="socket.io/socket.io.js"></script>
+<script>
+	var socket 	= io("http://localhost:3000"),
+		chat 	= null
+		notify 	= null;
+		
+	notify = function(data){
+		debugger
+		var id 		= 'notify_' + data.email,
+			notify 	= document.getElementById(id);
+			
+		if(notify)
+			notify.textContent = data.msg; 
+	}
+	
+	//fica ouvindo se algum contato ficou online
+	socket.on('notify-onlines', function(data){
+		notify({email: data, msg: 'Online'});
+	});
+	
+	//fica ouvindo se algum contato ficou offline
+	socket.on('notify-oflines', function(data){
+		notify({email: data, msg: 'Offline'});
+	});
+	
+	//fica ouvindo se algum contato envio alguma mensagem e atualiza a url da sala
+	socket.on('new-message', function(data){
+		try{
+			notify({email: data.usuario.email, msg: 'Mensagem'});
+			chat = document.getElementById('chat_' + data.usuario.email);
+			chat.href += '?sala=' + data.sala;	
+		}
+		catch(e){
+			alert("O usuário " + data.usuario.nome + " não faz parte do seu contato")	
+		}
+	});
+</script>
