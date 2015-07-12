@@ -5,6 +5,5 @@ exports.notFound = function(req, res, next){
 
 //trata erros internos da aplicação
 exports.serverError = function(error, req, res, next){
-	res.send(500);
-	res.render("server-error", {error: error});
+	res.status(500).render("server-error", {error: error});
 };
