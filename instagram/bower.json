@@ -1,0 +1,25 @@
+{
+  "name": "instagram",
+  "version": "1.0.0",
+  "homepage": "https://github.com/phcbarros/NodeJS",
+  "authors": [
+    "Paulo Henrique <paulohenrique@eggtech.com.br>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "description": "Criando um Instagram com NodeJS, Socket.IO e AngularJs",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.2",
+    "angular-route": "~1.4.2",
+    "ngImgCrop": "~0.3.2"
+  }
+}
