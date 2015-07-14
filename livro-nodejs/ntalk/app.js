@@ -1,8 +1,6 @@
-/// <reference path="typings/node/node.d.ts"/>
-var KEY             = "ntalk.sid",
-    SECRET          = "ntalk";
-        
+/// <reference path="typings/node/node.d.ts"/>       
 var express         = require("express"),
+    cfg             = require("./config.json"),
     load            = require("express-load"),
     bodyParser      = require("body-parser"),
     cookieParser    = require("cookie-parser"),
@@ -16,7 +14,7 @@ var express         = require("express"),
     app             = express(),
     server          = require("http").Server(app),
     io              = require("socket.io")(server),
-    cookie          = cookieParser(SECRET),
+    cookie          = cookieParser(cfg.SECRET),
     store           = new session.MemoryStore();
     
 //view engine    
@@ -28,8 +26,8 @@ app.disable('x-powered-by'); //desabilita o cabeçalho para não informar o nome
 app.use(compression());
 app.use(cookie); //incluído primeiro para o session usar o mesmo SessionID que será mantido no cookie
 app.use(session({
-    secret: SECRET,
-    name: KEY,
+    secret: cfg.SECRET,
+    name: cfg.KEY,
     resave: true,
     saveUninitialized: true,
     store: store
@@ -45,12 +43,12 @@ app.use(function(req, res, next){
     next();
 });
 
-io.adapter(redisAdapter({host: 'localhost', port: 6379}));
+io.adapter(redisAdapter(cfg.REDIS));
 io.use(function(socket, next){
    var data = socket.request; //recupera as informações da requisição (headers, cookies, etc)
 
    cookie(data, {}, function(err){
-       var sessionID = data.signedCookies[KEY]; //busca o sessionID
+       var sessionID = data.signedCookies[cfg.KEY]; //busca o sessionID
 
        //busca os dados da sessão que estão na memória
        store.get(sessionID, function(err, session){
@@ -66,7 +64,7 @@ io.use(function(socket, next){
 
 //arquivos estáticos
 app.use("/static", express.static(__dirname + '/public', {
-    maxAge: 3600000 //milissegundos
+    maxAge: cfg.CACHE //milissegundos
 }));
 
 //carregando as dependencias do projeto
