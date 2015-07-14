@@ -8,6 +8,8 @@ var express         = require("express"),
     cookieParser    = require("cookie-parser"),
     session         = require("express-session"),
     methodOverride  = require("method-override"),
+    compression     = require("compression"),
+    csurf           = require("csurf"),
     error           = require("./middlewares/error"),
     redisAdapter    = require("socket.io-redis"),
     RedisStore      = require("connect-redis")(session),
@@ -22,6 +24,8 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 
 //configuração dos middlewares
+app.disable('x-powered-by'); //desabilita o cabeçalho para não informar o nome do servidor que a aplicação está hospedata
+app.use(compression());
 app.use(cookie); //incluído primeiro para o session usar o mesmo SessionID que será mantido no cookie
 app.use(session({
     secret: SECRET,
@@ -33,6 +37,13 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method")); //permite que uma mesma rota seja reaproveitada entre métodos distintos do HTTP
+app.use(csurf());
+app.use(function(req, res, next){
+    //cada requisição realizada por qualquer rota (exceto arquivos estáticos) será gerada uma variável local para as views,
+    //isto acontece através do código abaixo
+    res.locals._csrf = req.csrfToken();
+    next();
+});
 
 io.adapter(redisAdapter({host: 'localhost', port: 6379}));
 io.use(function(socket, next){
@@ -54,7 +65,9 @@ io.use(function(socket, next){
 });
 
 //arquivos estáticos
-app.use("/static", express.static(__dirname + '/public'));
+app.use("/static", express.static(__dirname + '/public', {
+    maxAge: 3600000 //milissegundos
+}));
 
 //carregando as dependencias do projeto
 load("models")
