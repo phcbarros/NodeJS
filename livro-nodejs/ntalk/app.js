@@ -9,6 +9,8 @@ var express         = require("express"),
     session         = require("express-session"),
     methodOverride  = require("method-override"),
     error           = require("./middlewares/error"),
+    redisAdapter    = require("socket.io-redis"),
+    RedisStore      = require("connect-redis")(session),
     app             = express(),
     server          = require("http").Server(app),
     io              = require("socket.io")(server),
@@ -32,6 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method")); //permite que uma mesma rota seja reaproveitada entre métodos distintos do HTTP
 
+io.adapter(redisAdapter({host: 'localhost', port: 6379}));
 io.use(function(socket, next){
    var data = socket.request; //recupera as informações da requisição (headers, cookies, etc)
 
