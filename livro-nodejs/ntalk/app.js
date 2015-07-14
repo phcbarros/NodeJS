@@ -13,11 +13,7 @@ var express         = require("express"),
     server          = require("http").Server(app),
     io              = require("socket.io")(server),
     cookie          = cookieParser(SECRET),
-    store           = new session.MemoryStore(),
-    mongoose        = require('mongoose');
-
-//variável global para manter uma conexão com o banco de dados compartilhando os seus recursos
-global.db = mongoose.connect('mongodb://localhost/ntalk');
+    store           = new session.MemoryStore();
     
 //view engine    
 app.set("views", __dirname + "/views");

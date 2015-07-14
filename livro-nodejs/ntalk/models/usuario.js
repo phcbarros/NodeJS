@@ -1,7 +1,7 @@
-/* global db */
 module.exports = function(app){
 	
-	var Schema 	= require('mongoose').Schema,
+	var db		= require('../lib/db_connect')(),
+		Schema 	= require('mongoose').Schema,
 		contato	= Schema({
 			nome: String,
 			email: String
@@ -11,6 +11,6 @@ module.exports = function(app){
 			email: {type: String, required: true, index: {unique: true}},
 			contatos: [contato]
 		});
-	
+
 	return db.model('usuarios', usuario);	
 };
