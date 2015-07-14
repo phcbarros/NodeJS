@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": false,
   "scripts": {
-    "start": "DEBUG=* node clusters.js >> app.log",
+    "start": "DEBUG=* node server",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha test/**/*.js"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "express": "~4.13.0",
     "express-load": "^1.1.14",
     "express-session": "^1.11.3",
+    "forever-monitor": "^1.5.2",
     "method-override": "^2.3.3",
     "mongoose": "^4.0.7",
     "redis": "^0.12.1",
