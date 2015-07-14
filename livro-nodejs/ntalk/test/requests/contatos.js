@@ -1,6 +1,5 @@
 /// <reference path="../../typings/mocha/mocha.d.ts"/>
 var app		= require('../../app'),
-	should	= require('should'),
 	request	= require('supertest')(app);
 	
 describe('No Controller Contatos', function(){
