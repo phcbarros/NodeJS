@@ -25,11 +25,4 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
-livro-nodejs/ntalk/node_modules
-livro-nodejs/ntalk/typings
-instagram/node_modules
-instagram/bower_components
-aulas-caio-cutrim/typings
-uploadfile/node_modules
-validacao_string/node_modules
-validacao_string/typings
+typings
