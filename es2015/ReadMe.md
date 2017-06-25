@@ -356,3 +356,52 @@ const qtdProdutosCaros = estoque
 
 console.log(`Total de produtos caros ${qtdProdutosCaros}`); //Total de produtos caros 39
 ```
+
+### This vs This Léxico
+
+#### Node
+
+O **this** dentro de uma arrow function aponta para o this de onde ela foi declarada independentemente se estiver como **_strict mode_** ou usando **_bind_**.
+
+O this no strict mode dentro de uma função normal aponta para _undefined_.
+
+```javascript
+//arrow-function/ex37_func_strict.js
+'use strict'
+
+this.desc = 'Sou eu... :p';
+console.log(this); //{ desc: 'Sou eu... :p' }
+
+const func = function(msg) {
+    console.log(msg, this === undefined);
+}
+func('Sem bind'); //Sem bind true
+
+const funcBind = func.bind(this);
+funcBind('Com bind'); //Com bind false
+
+const arrowFunc = () => console.log('Arrow function', this, this === module.exports);
+arrowFunc(); //Arrow function { desc: 'Sou eu... :p' } true
+```
+
+Sem strict mode
+
+```javascript
+this.desc = 'Sou module.exports... :P';
+
+const obj = { desc: 'Sou o objeto... :P '};
+
+const func = function(){
+    console.log(this);
+}
+func(); //setTimeout: { [Function: setTimeout] [Symbol(util.promisify.custom)]: 
+
+const funcBind =  func.bind(obj);
+funcBind(); //{ desc: 'Sou o objeto... :P ' }
+
+const arrowFunc = () => console.log(this);
+arrowFunc(); //{ desc: 'Sou module.exports... :P' }
+
+const arrowFuncBind = arrowFunc.bind(obj);
+arrowFuncBind(); //{ desc: 'Sou module.exports... :P' }
+```
