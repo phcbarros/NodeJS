@@ -67,6 +67,7 @@ Usada para interpolação de strings. Pode ser usado com múltiplas linhas, vari
 A formatação é respeitada.
 
 ```javascript
+//template-string/ex13_templ.js
 let nome = 'paulo';
 let es5 = 'olá ' + nome + '!';
 let es6 = `
@@ -84,6 +85,7 @@ console.log(es5, es6);
 A expressão será interpretada.
 
 ```javascript
+//template-string/ex14_expr.js
 function upper(s){
     return s.toUpperCase();
 }
@@ -99,6 +101,7 @@ console.log(`Ei...${upper('cuidado')}`);
 Processa o template dentro de uma função.
 
 ```javascript
+//template-string/ex15_tag.js
 function tag(strings, ...values){
     console.log(strings);
     console.log(values);
@@ -117,6 +120,7 @@ console.log(tag `O aluno ${nome} está ${status}`);
 
 Exemplo real:
 ```javascript
+//template-string/ex16_real.js
 function real(strings, ...values){
     const resultado = [];
     values.forEach((value, index) => {
@@ -130,4 +134,101 @@ function real(strings, ...values){
 
 const preco = 29.99, parcela = 11;
 console.log(real `1x de ${preco} ou 3x de ${parcela}`); //1x de R$29.99 ou 3x de R$11.00
+```
+
+## Destructuring ({} ou [])
+Forma simples de obter dados de objetos e arrays e precisa ser inicializado quando declarado.
+
+### Objeto
+Para recuperar o valor é preciso criar as variáveis dentro de **_{}_** ou **_[]_** com o mesmo nome da propriedade do objeto.
+
+```javascript
+//destructuring/ex17_obj.js
+const pessoa = { nome: 'Ana', idade: 51 };
+
+const { nome, idade } = pessoa;
+console.log(nome, idade); //Ana 51
+```
+
+Pode dar outros nomes para as variávies.
+```javascript
+const { nome: n, idade: i} = pessoa;
+console.log(n, i); //Ana 51
+```
+
+Pode definir valores padrão quando a propriedade não existir no objeto.
+
+```javascript
+const { genero, situacao = 'Ativa'} = pessoa;
+console.log(genero, situacao); //undefined Ativa
+```
+
+Pode-se obter dados de objetos aninhados.
+```javascript
+//destructuring/ex18_deep.js
+const pessoa = { 
+    nome: 'Ana',
+    endereco: {
+        rua: 'A',
+        numero: 1000
+    }
+}
+
+const { endereco : { rua, numero, cep } } = pessoa;
+console.log(rua, numero, cep); //A 1000 undefined
+```
+
+Não é possível tentar obter o valor de um objeto que não exista dentro do objeto que está sendo feita a busca.
+
+```javascript
+//destructuring/ex18_deep.js
+const { conta: { agencia } } = pessoa;
+console.log(agencia);
+//Cannot match against 'undefined' or 'null'.
+```
+
+### Array
+Para recuperar os valores de uma array é preciso declarar as variáveis na posição que elas estão dentro do array.
+
+```javascript
+//destructuring/ex19_array.js
+const [a] = [10];
+console.log(a); //10
+
+const [n1,,n3,,n5,n6 = 0] = [10,5,7,9];
+console.log(n1, n3, n5, n6); //10 7 undefined 0
+
+const [,[,nota]] = [[4,3,7],[1,10,5]];
+console.log(nota); //10
+```
+
+### Funções
+
+O operador destructuring também funciona dentro de função.
+
+```javascript
+//destructuring/ex20_func.js
+function random({ min = 0, max = 1000}){
+    const value = Math.random() * (max - min);
+    return Math.floor(value) + min;
+}
+
+console.log(random({min: 12, max: 5})); //10
+console.log(random({min: 50})); //217
+console.log(random({})); //833
+console.log(random()); //Cannot match against 'undefined' or 'null'.
+```
+
+```javascript
+//destructuring/ex21_func.js
+function random([min = 0, max = 1000]){
+    if(min > max) [min, max] = [max, min];
+    const value = Math.random() * (max - min);
+    return Math.floor(value) + min;
+}
+
+console.log(random([12, 5])); //10
+console.log(random([100])); //217
+console.log(random([, 900])); //698
+console.log(random([])); //1
 ```
