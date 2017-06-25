@@ -232,3 +232,43 @@ console.log(random([100])); //217
 console.log(random([, 900])); //698
 console.log(random([])); //1
 ```
+
+## Parâmetro Padrão
+
+Usado para definir o valor padrão de um parâmetro passado para uma função.
+
+```javascript
+//parametro-padrao/ex30_es6.js
+function soma(a = 1, b = 1) {
+    return a = b;
+}
+
+console.log(soma(), soma(2,5), soma(0));
+```
+
+Pode-se passar uma expressão como parâmetro padrão.
+
+```javascript
+//parametro-padrao/ex31_func.js
+function defVal() {
+    return 2;
+}
+
+function soma(a = defVal() + 1, b = defVal()) {
+    return a + b;
+}
+
+console.log(soma(), soma(2,5), soma(0));
+```
+
+Obs.: Quando define-se uma função como valor padrão é preciso tomar cuidado com os parâmetros passados para a função, pois se o valor padrão é chamado dentro da função e valor informado é **_null_** um erro irá acontencer.
+
+```javascript
+function click(callback = function() {}) {
+    callback();
+}
+
+click(); //OK
+click(undefined); //OK
+click(null); //TypeError: callback is not a function
+```
