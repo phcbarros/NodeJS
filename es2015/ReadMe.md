@@ -272,3 +272,42 @@ click(); //OK
 click(undefined); //OK
 click(null); //TypeError: callback is not a function
 ```
+
+## Operador Spread/Rest ...array
+
+Usado para **_agrupar (rest)_** ou **_espalhar (spread)_** os dados do array.
+
+### Spread
+```javascript
+//operadodr-spread-rest/ex33_spread.js
+function media(p1, p2, p3) {
+    return ((p1 + p2 + p3) / 3).toFixed(2);
+}
+
+const notas = [7.2, 7.8, 8.2, 0];
+console.log(media.apply(null, notas));
+console.log(media(...notas));
+```
+
+Pode-se usar o operador **_spread_** para concatenar arrays.
+
+```javascript 
+const notasAlunos = [7.5, 5.5, 10.0];
+const turmaES5 = notasAlunos.concat([8.9, 9.9, 4.3]);
+const turmaES6 = [...notasAlunos, 8.9, 9.9, 4.3]
+
+console.log(turmaES5); //[ 7.5, 5.5, 10, 8.9, 9.9, 4.3 ]
+console.log(turmaES6); //[ 7.5, 5.5, 10, 8.9, 9.9, 4.3 ]
+```
+
+### Rest
+Usando o operador rest para agrupar as notas passadas indiviualmente em um array para efetuar o cálculo da média.
+
+```javascript
+function media(...notas) {
+    const total = notas.reduce((soma, nota) => soma + nota);
+    return (total /notas.length).toFixed(2);
+}
+
+console.log(media(7.8, 8.5, 9.3)); //8.53
+```
