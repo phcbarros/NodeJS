@@ -311,3 +311,48 @@ function media(...notas) {
 
 console.log(media(7.8, 8.5, 9.3)); //8.53
 ```
+
+## Arrow Functions
+
+Redução da sintaxe.
+
+```javascript
+const array = [1,2,3,4,5];
+
+const numerosMaiorQue2 = array.filter(function(item) {
+    return item > 2;
+});
+
+const numeroMaiorQue3 = array.filter(item => item > 3);
+```
+
+Criação de funções menores que podem ser facilmente reusadas, encorajando o uso e princípios de programação funcional.
+
+```javascript
+const estoque = [
+    { nome: 'Livro', preco: 12.58, quantidade: 52, fragil: false },
+    { nome: 'Monitor LG', preco: 1512.58, quantidade: 12, fragil: true },
+    { nome: 'Ovo - 30 un', preco: 10.00, quantidade: 100, fragil: true },
+    { nome: 'Ipad 32 GB, 1219', preco: 2220.00, quantidade: 15, fragil: true },
+    { nome: 'Pneu Pirelli', preco: 1000.99, quantidade: 12, fragil: false }
+];
+
+const isPrecoAlto = item => item.preco >= 1000;
+const isFragil = item => item.fragil;
+const soma = (total, quantidade) => total + quantidade
+
+const qtdProdutosCarosEFrageis = estoque
+    .filter(isPrecoAlto)
+    .filter(isFragil)
+    .map(item => item.quantidade)
+    .reduce(soma);
+
+console.log(`Total de produtos caros e frágeis ${qtdProdutosCarosEFrageis}`); //Total de produtos caros e frágeis 27
+
+const qtdProdutosCaros = estoque
+    .filter(isPrecoAlto)
+    .map(item => item.quantidade)
+    .reduce(soma);
+
+console.log(`Total de produtos caros ${qtdProdutosCaros}`); //Total de produtos caros 39
+```
