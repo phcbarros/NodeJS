@@ -58,3 +58,76 @@ console.log(produto.nome); //Notebook
 
 produto = {}; //Assignment to constant variable.
 ```
+
+## Template Literals \`...`
+
+Usada para interpolação de strings. Pode ser usado com múltiplas linhas, variaváveis e expressões;
+
+### Múltiplas linhas
+A formatação é respeitada.
+
+```javascript
+let nome = 'paulo';
+let es5 = 'olá ' + nome + '!';
+let es6 = `
+    olá
+    ${nome}!`;
+
+console.log(es5, es6);
+
+//olá paulo!
+//    olá
+//    paulo!
+```
+
+### Expressão
+A expressão será interpretada.
+
+```javascript
+function upper(s){
+    return s.toUpperCase();
+}
+
+console.log(`O soma de 1 + 1 = ${ 1 + 1 }`);
+console.log(`Ei...${upper('cuidado')}`);
+
+//O soma de 1 + 1 = 2
+//Ei...CUIDADO
+```
+
+### Tagged Templates
+Processa o template dentro de uma função.
+
+```javascript
+function tag(strings, ...values){
+    console.log(strings);
+    console.log(values);
+    return 'Outro valor';
+}
+
+let nome = 'Paulo';
+let status = 'Aprovado';
+
+console.log(tag `O aluno ${nome} está ${status}`);
+
+//[ 'O aluno ', ' está ', '' ]
+//[ 'Paulo', 'Aprovado' ]
+//Outro valor
+```
+
+Exemplo real:
+```javascript
+function real(strings, ...values){
+    const resultado = [];
+    values.forEach((value, index) => {
+        value = (typeof value === 'number') 
+            ? `R$${value.toFixed(2)}` : value;
+        
+        resultado.push(strings[index], value);
+    });
+    return resultado.join('');
+}
+
+const preco = 29.99, parcela = 11;
+console.log(real `1x de ${preco} ou 3x de ${parcela}`); //1x de R$29.99 ou 3x de R$11.00
+```
