@@ -9,7 +9,7 @@ const PokemonAbilitiesSchema = z.object({
   }),
 })
 
-const CreatePokemonSchema = z.object({
+const PokemonSchema = z.object({
   id: z.number(),
   name: z.string(),
   base_experience: z.number(),
@@ -20,6 +20,19 @@ const CreatePokemonSchema = z.object({
   abilities: z.array(PokemonAbilitiesSchema),
 })
 
-type PokemonResponse = z.infer<typeof CreatePokemonSchema>
+type Pokemon = z.infer<typeof PokemonSchema>
 
-export {CreatePokemonSchema, PokemonResponse}
+const PokemonRequestByIdSchema = z.object({
+  id: z.string().length(4).regex(new RegExp('^[0-9]*$')),
+})
+
+const PokemonRequestByNameSchema = z.object({
+  name: z.string().regex(new RegExp('^[a-zA-Z]')),
+})
+
+export {
+  PokemonSchema,
+  Pokemon,
+  PokemonRequestByIdSchema,
+  PokemonRequestByNameSchema,
+}
