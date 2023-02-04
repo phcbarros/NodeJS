@@ -1,28 +1,31 @@
-import axios, {AxiosError, HttpStatusCode} from 'axios'
+import axios, {HttpStatusCode} from 'axios'
 import {Pokemon, PokemonSchema} from './schemas'
-import {failTryHandler, successTryHandler} from './workflow'
+import {failTry, successTry} from './workflow'
 import {
   APIErrorResponseDTO,
-  TryHandler,
   createAPIErrorResponseDTO,
+  CTry,
 } from './workflowWithClass'
 
+// using class CTry
 export async function getPokemonById(id: string) {
   try {
     const {data} = await axios.get<Pokemon>(
       `https://pokeapi.co/api/v2/pokemon/${id}`,
     )
 
-    return TryHandler.success<Pokemon>(PokemonSchema.parse(data))
+    return CTry.success<Pokemon>(PokemonSchema.parse(data))
   } catch (error) {
     const errorResponse = createAPIErrorResponseDTO({
       errorMessage: 'Error',
       errorTitle: 'Erro API Pokémon',
       statusCode: HttpStatusCode.BadRequest,
     })
-    return TryHandler.fail<APIErrorResponseDTO>(errorResponse)
+    return CTry.fail<APIErrorResponseDTO>(errorResponse)
   }
 }
+
+// using functional way
 
 export async function getPokemonByName(name: string) {
   try {
@@ -30,29 +33,13 @@ export async function getPokemonByName(name: string) {
       `https://pokeapi.co/api/v2/pokemon/${name}`,
     )
 
-    return successTryHandler<Pokemon>(PokemonSchema.parse(data))
+    return successTry<Pokemon>(PokemonSchema.parse(data))
   } catch (error) {
-    let statusCode = HttpStatusCode.BadRequest
-
-    if (error instanceof AxiosError) {
-      statusCode =
-        error.response?.status == 404
-          ? HttpStatusCode.NotFound
-          : HttpStatusCode.BadRequest
-
-      const errorResponse = createAPIErrorResponseDTO({
-        errorMessage: 'Pokemon not found',
-        errorTitle: 'Erro API Pokémon',
-        statusCode: statusCode,
-      })
-      return failTryHandler<APIErrorResponseDTO>(errorResponse)
-    }
-
     const errorResponse = createAPIErrorResponseDTO({
       errorMessage: 'Error',
       errorTitle: 'Erro API Pokémon',
-      statusCode: statusCode,
+      statusCode: HttpStatusCode.BadRequest,
     })
-    return failTryHandler<APIErrorResponseDTO>(errorResponse)
+    return failTry<APIErrorResponseDTO>(errorResponse)
   }
 }

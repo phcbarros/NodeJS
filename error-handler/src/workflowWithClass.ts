@@ -14,7 +14,7 @@ export const createAPIErrorResponseDTO = ({
   statusCode: HttpStatusCode
   errorMessage: string
   errorTitle: string
-}): APIErrorResponseDTO => {
+}): Readonly<APIErrorResponseDTO> => {
   return {
     HttpResponseStatusCode: statusCode,
     ErrorMessage: errorMessage,
@@ -22,26 +22,32 @@ export const createAPIErrorResponseDTO = ({
   }
 }
 
-export class TryHandler<T> {
-  operationFailed: boolean
-  errorMessage: APIErrorResponseDTO | null
-  data: T | null
+export class CTry<T> {
+  operationFailed: Readonly<boolean>
+  error: Readonly<APIErrorResponseDTO>
+  data: Readonly<T>
 
   private constructor(
     operationFailed: boolean,
-    data: T | null,
-    errorMessage: APIErrorResponseDTO | null = null,
+    data: T,
+    error: APIErrorResponseDTO,
   ) {
     this.operationFailed = operationFailed
-    this.errorMessage = errorMessage
+    this.error = error
     this.data = data
   }
 
-  static success<T>(data: T): TryHandler<T> {
-    return new TryHandler(false, data)
+  static success<T>(data: T): CTry<T> {
+    return new CTry(false, data, {} as APIErrorResponseDTO)
   }
 
-  static fail<T>(errorMessage: APIErrorResponseDTO): TryHandler<T> {
-    return new TryHandler<T>(true, null, errorMessage)
+  static fail<T>(error: APIErrorResponseDTO): CTry<T> {
+    return new CTry<T>(true, {} as T, error)
+  }
+
+  static fromTry = <T>(operation: CTry<T>): CTry<T> => {
+    return operation.operationFailed
+      ? new CTry<T>(true, operation.data, operation.error)
+      : new CTry<T>(false, operation.data, operation.error)
   }
 }

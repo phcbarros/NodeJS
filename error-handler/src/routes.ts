@@ -1,6 +1,12 @@
 import {Router} from 'express'
 import {getPokemonById, getPokemonByName} from './poke.api'
-import {PokemonRequestByIdSchema, PokemonRequestByNameSchema} from './schemas'
+import {
+  Pokemon,
+  PokemonRequestByIdSchema,
+  PokemonRequestByNameSchema,
+} from './schemas'
+import {fromTry, Try} from './workflow'
+import {CTry} from './workflowWithClass'
 
 export function getRoutes() {
   const router = Router()
@@ -12,12 +18,12 @@ export function getRoutes() {
       return res.sendStatus(400)
     }
 
-    const {data, errorMessage, operationFailed} = await getPokemonById(
-      result.data.id,
+    const {data, error, operationFailed} = CTry.fromTry(
+      (await getPokemonById(result.data.id)) as CTry<Pokemon>,
     )
 
     if (operationFailed) {
-      return res.status(errorMessage!.HttpResponseStatusCode).send(errorMessage)
+      return res.status(error.HttpResponseStatusCode).send(error)
     }
 
     return res.send(data)
@@ -30,12 +36,12 @@ export function getRoutes() {
       return res.status(400).send(result)
     }
 
-    const {data, errorMessage, operationFailed} = await getPokemonByName(
-      req.params.name,
+    const {data, error, operationFailed} = fromTry(
+      (await getPokemonByName(req.params.name)) as Try<Pokemon>,
     )
 
     if (operationFailed) {
-      return res.status(errorMessage!.HttpResponseStatusCode).send(errorMessage)
+      return res.status(error!.HttpResponseStatusCode).send(error)
     }
 
     return res.send(data)
