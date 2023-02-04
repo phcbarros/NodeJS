@@ -48,16 +48,12 @@ export function getRoutes() {
   })
 
   router.route('/delayed/delay').get(async (_, res) => {
-    try {
-      const SECONDS_DELAY = 6000
-      await new Promise<void>((resolve) => {
-        setTimeout(() => resolve(), SECONDS_DELAY)
-      })
+    const SECONDS_DELAY = 6000
+    await new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), SECONDS_DELAY)
+    })
 
-      return res.send({hello: 'delayed world'})
-    } catch (error) {
-      console.log(error)
-    }
+    return res.send({hello: 'delayed world'})
   })
 
   return router
