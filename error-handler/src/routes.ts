@@ -5,7 +5,7 @@ import {
   PokemonRequestByIdSchema,
   PokemonRequestByNameSchema,
 } from './schemas'
-import {fromTry, Try} from './workflow'
+import {Try} from './workflow'
 import {CTry} from './workflowWithClass'
 
 export function getRoutes() {
@@ -18,8 +18,8 @@ export function getRoutes() {
       return res.sendStatus(400)
     }
 
-    const {data, error, operationFailed} = CTry.fromTry(
-      (await getPokemonById(result.data.id)) as CTry<Pokemon>,
+    const {data, error, operationFailed} = CTry.fromTry<Pokemon>(
+      await getPokemonById(result.data.id),
     )
 
     if (operationFailed) {
@@ -36,8 +36,8 @@ export function getRoutes() {
       return res.status(400).send(result)
     }
 
-    const {data, error, operationFailed} = fromTry(
-      (await getPokemonByName(req.params.name)) as Try<Pokemon>,
+    const {data, error, operationFailed} = Try.from<Pokemon>(
+      await getPokemonByName(req.params.name),
     )
 
     if (operationFailed) {

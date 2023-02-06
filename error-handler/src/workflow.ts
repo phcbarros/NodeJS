@@ -14,16 +14,22 @@ function createTry<T>(
   return {operationFailed, error, data}
 }
 
-export const successTry = <T>(data: T): Try<T> => {
+const success = <T>(data: T): Try<T> => {
   return createTry<T>(false, data, {} as APIErrorResponseDTO)
 }
 
-export const failTry = <T>(errorMessage: APIErrorResponseDTO): Try<T> => {
+const fail = <T>(errorMessage: APIErrorResponseDTO): Try<T> => {
   return createTry<T>(true, {} as T, errorMessage)
 }
 
-export const fromTry = <T>(operation: Try<T>): Try<T> => {
+const from = <T>(operation: Try<T>): Try<T> => {
   return operation.operationFailed
     ? createTry<T>(true, operation.data, operation.error)
     : createTry<T>(false, operation.data, operation.error)
 }
+
+export const Try = {
+  success,
+  fail,
+  from,
+} as const
