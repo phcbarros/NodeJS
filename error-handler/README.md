@@ -46,5 +46,6 @@ O projeto possui 3 arquivo de Dockerfile:
 - [Official Docker documentation](https://hub.docker.com/_/node/)
 - [10 best practices to containerize Node.js web applications with Docker](https://snyk.io/blog/10-best-practices-to-containerize-nodejs-web-applications-with-docker/)
 - [Node.js Docker Best Practices Guide](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md)
+- [How to Build TypeScript for Production in Docker](https://logfetch.com/docker-typescript-production/)
 
 ![image info](./docs/NodeJS-cheat-sheet.jpg)
