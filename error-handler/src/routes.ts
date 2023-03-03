@@ -1,12 +1,11 @@
 import {Router} from 'express'
+import {isLeft} from 'fp-ts/lib/Either'
 import {getPokemonById, getPokemonByName} from './poke.api'
 import {
   Pokemon,
   PokemonRequestByIdSchema,
   PokemonRequestByNameSchema,
 } from './schemas'
-import {Try} from './workflow'
-import {CTry} from './workflowWithClass'
 
 export function getRoutes() {
   const router = Router()
@@ -18,15 +17,15 @@ export function getRoutes() {
       return res.sendStatus(400)
     }
 
-    const {data, error, operationFailed} = CTry.fromTry<Pokemon>(
-      await getPokemonById(result.data.id),
-    )
+    const getPokemonByIdResult = await getPokemonById(result.data.id)
 
-    if (operationFailed) {
-      return res.status(error.HttpResponseStatusCode).send(error)
+    if (isLeft(getPokemonByIdResult)) {
+      return res
+        .status(getPokemonByIdResult.left.HttpResponseStatusCode)
+        .send(getPokemonByIdResult.left)
     }
 
-    return res.send(data)
+    return res.send(getPokemonByIdResult.right)
   })
 
   router.route('/name/:name').get(async (req, res) => {
@@ -36,15 +35,15 @@ export function getRoutes() {
       return res.status(400).send(result)
     }
 
-    const {data, error, operationFailed} = Try.from<Pokemon>(
-      await getPokemonByName(req.params.name),
-    )
+    const getPokemonByNameResult = await getPokemonByName(result.data.name)
 
-    if (operationFailed) {
-      return res.status(error!.HttpResponseStatusCode).send(error)
+    if (isLeft(getPokemonByNameResult)) {
+      return res
+        .status(getPokemonByNameResult.left.HttpResponseStatusCode)
+        .send(getPokemonByNameResult.left)
     }
 
-    return res.send(data)
+    return res.send(getPokemonByNameResult.right)
   })
 
   router.route('/delayed/delay').get(async (_, res) => {
